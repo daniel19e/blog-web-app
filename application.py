@@ -1,8 +1,10 @@
 from flask import Flask, flash, redirect, render_template, request, session
 from functools import wraps
+from forms import Register, Login
 
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'vzj9ew5aeuqf5m19'
 
 def login_required(f):
     """
@@ -24,13 +26,17 @@ def index():
 def about():
     return render_template("about.html", title = "About")
 
-@app.route("/register")
+@app.route("/register", methods=['GET','POST'])
 def register():
-    return render_template("register.html", title= "Register")
-
+    form = Register()
+    if form.validate_on_submit():
+        flash(f'Successfully created an account for {form.username.data}', 'info')
+        return redirect('/')
+    return render_template("register.html", title="Register", form=form)
 @app.route("/login")
 def login():
-    return render_template("login.html", title = "Login")
+    form = Login()
+    return render_template("login.html", title = "Login", form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)

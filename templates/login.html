@@ -5,13 +5,47 @@
 <div class="container-fluid">
 
     <form action="/login" method="post">
+        {{ form.hidden_tag() }}
         <div class="form-group mb-2">
-            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+            {% if form.email.errors %}
+                {{ form.email(class="form-control is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.email.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+            {{ form.email(class="form-control", placeholder="Email",autocomplete="off")}}
+            {% endif %}
         </div>
         <div class="form-group mb-2">
-            <input class="form-control" name="password" placeholder="Password" type="password">
+            {% if form.password.errors %}
+                {{ form.password(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.password.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.password(class="form-control", placeholder="Password") }}
+            {% endif %}
         </div>
-        <button class="btn btn-info" type="submit">Login</button>
+        <div class="form-group mb-2">
+            {{ form.remember_user.label(class="form-check-label")}}
+            {{ form.remember_user(class="form-check-input")}}
+        </div>
+        <div class="form-group mb-2">
+            {{ form.submit(class="btn btn-info")}}
+        </div>
+        <small class="text-muted pt-3">
+            <a href="#">Forgot Password?</a>
+        </small>
+        <div class="pt-3">
+            <small class="text-muted">
+                Need an account? <a href="/register">Register</a>
+            </small>
+        </div>
+        
     </form>
 
 </div>

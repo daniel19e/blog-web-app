@@ -1,2 +1,5 @@
 Flask
-
+flask_sqlalchemy
+functools
+flask_bcrypt
+flask_login

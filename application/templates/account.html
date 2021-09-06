@@ -1,13 +1,47 @@
 {% extends "layout.html" %}
 {% block main %}
     <div class="content-section">
-        <div class="media">
-          <img class="rounded-circle account-img" src="userimage.jpg">
-          <div class="media-body">
-            <h2 class="account-heading">Username</h2>
-            <p class="text-secondary">username@email.com</p>
-          </div>
+        <div class="row">
+          <div class="col-3">
+          <img class="rounded-circle account-img" src="{{ img_file }}">
         </div>
-        <!-- FORM HERE -->
+          <div class="col-4">
+            <h2 class="account-heading">{{ current_user.username }}</h2>
+            <p class="text-secondary">{{ current_user.email }}</p>
+          </div>
+
+        <!-- FORM -->
+        <div class="col-4 pt-2">
+
+          <form action="" method="post">
+              {{ form.hidden_tag() }}
+              <div class="form-group mb-2">
+                  {% if form.username.errors %}
+                      {{ form.username(class="form-control form-control is-invalid")}}
+                      <div class="invalid-feedback">
+                          {% for error in form.username.errors %}
+                              <span>{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                  {{ form.username(class="form-control form-control", placeholder="Username",autocomplete="off")}}
+                  {% endif %}
+              </div>
+              <div class="form-group mb-2">
+                  {% if form.email.errors %}
+                  {{ form.email(class="form-control is-invalid")}}
+                  <div class="invalid-feedback">
+                      {% for error in form.email.errors %}
+                          <span>{{ error }}</span>
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ form.email(class="form-control", placeholder="Email",autocomplete="off")}}
+              {% endif %}
+              </div>
+                  {{ form.submit(class="btn btn-info")}}
+          </form>
+        </div>
+      </div>
       </div>
 {% endblock %}

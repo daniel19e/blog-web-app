@@ -1,8 +1,8 @@
 from logging import log
-from flask import flash, redirect, render_template
+from flask import flash, redirect, render_template, url_for, request
 from application import app, db, bcrypt
 from application.models import User
-from application.forms import Register, Login
+from application.forms import Register, Login, UpdateAccountInfo
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -46,7 +46,19 @@ def logout():
     logout_user()
     return redirect('/login')
 
-@app.route('/account')
+@app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html', title='Account')
+    form = UpdateAccountInfo()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Account updated successfully', 'info')
+        return redirect('/account')
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    img_file = url_for('static', filename='profile_pics/' + current_user.image)
+    return render_template('account.html', title='Account',
+                            img_file=img_file, form=form)

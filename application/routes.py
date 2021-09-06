@@ -2,6 +2,7 @@ from flask import flash, redirect, render_template
 from application import app, db, bcrypt
 from application.models import User
 from application.forms import Register, Login
+from flask_login import login_user
 
 @app.route("/")
 def index():
@@ -26,9 +27,10 @@ def register():
 def login():
     form = Login()
     if form.validate_on_submit():
-        if form.email.data == 'a@gmail.com' and form.password.data == '123':
-            flash('Successfully logged in', 'info')
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember_user.data)
             return redirect('/')
         else:
-            flash('Incorrect Username or Password', 'danger')
+            flash('Incorrect Email or Password', 'danger')
     return render_template("login.html", title = "Login", form=form)

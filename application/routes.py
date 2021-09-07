@@ -1,4 +1,6 @@
 from logging import log
+import secrets
+import os
 from flask import flash, redirect, render_template, url_for, request
 from application import app, db, bcrypt
 from application.models import User
@@ -46,11 +48,25 @@ def logout():
     logout_user()
     return redirect('/login')
 
+def get_picture(form_pic):
+    rand_hex = secrets.token_hex(8)
+    _ , file_extension = os.path.splitext(form_pic.filename)
+    pict_name = rand_hex + file_extension
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', pict_name)
+    form_pic.save(picture_path)
+    prev_picture = os.path.join(app.root_path, 'static/profile_pics', current_user.image)
+    if os.path.exists(prev_picture) and current_user.image != 'default.jpg':
+        os.remove(prev_picture)
+    return pict_name
+
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
     form = UpdateAccountInfo()
     if form.validate_on_submit():
+        if form.prof_pic.data:
+            picture_file = get_picture(form.prof_pic.data)
+            current_user.image = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
         db.session.commit()

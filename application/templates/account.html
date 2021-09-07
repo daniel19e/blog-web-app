@@ -24,7 +24,7 @@
                           {% endfor %}
                       </div>
                   {% else %}
-                  {{ form.username(class="form-control form-control", placeholder="Username",autocomplete="off")}}
+                  {{ form.username(class="form-control form-control", placeholder="Username",autocomplete="off", style="width:15em")}}
                   {% endif %}
               </div>
               <div class="form-group mb-2">
@@ -36,7 +36,7 @@
                       {% endfor %}
                   </div>
               {% else %}
-                  {{ form.email(class="form-control", placeholder="Email",autocomplete="off")}}
+                  {{ form.email(class="form-control", placeholder="Email",autocomplete="off", style="width:15em")}}
               {% endif %}
               </div>
               <div class="form-group">

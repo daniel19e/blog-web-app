@@ -4,6 +4,13 @@ nav .navbar-brand
     font-size: xx-large;
 }
 
+body
+{
+  background-image: url('background.jpg') ;
+  background-size: 100% 120vh;
+  background-repeat: no-repeat;
+}
+
 
 /* Colors for brand */
 nav .navbar-brand .logo
@@ -89,7 +96,7 @@ main
   }
 
   .content-section {
-    background: #ffffff;
+    background: rgba(255,255,255,0.7);
     padding: 10px 20px;
     border: 1px solid #dddddd;
     border-radius: 3px;

@@ -1,5 +1,6 @@
 from logging import log
 import secrets
+from PIL import Image
 import os
 from flask import flash, redirect, render_template, url_for, request
 from application import app, db, bcrypt
@@ -53,7 +54,12 @@ def get_picture(form_pic):
     _ , file_extension = os.path.splitext(form_pic.filename)
     pict_name = rand_hex + file_extension
     picture_path = os.path.join(app.root_path, 'static/profile_pics', pict_name)
-    form_pic.save(picture_path)
+    
+    size = (400, 400)
+    resized_pic = Image.open(form_pic)
+    resized_pic.thumbnail(size)  #changing size of picture to save space
+    resized_pic.save(picture_path)  
+    #check if previous picture isn't the default picture
     prev_picture = os.path.join(app.root_path, 'static/profile_pics', current_user.image)
     if os.path.exists(prev_picture) and current_user.image != 'default.jpg':
         os.remove(prev_picture)

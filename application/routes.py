@@ -5,7 +5,7 @@ import os
 from flask import flash, redirect, render_template, url_for, request
 from application import app, db, bcrypt
 from application.models import User
-from application.forms import Register, Login, UpdateAccountInfo
+from application.forms import Register, Login, UpdateAccountInfo, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -84,3 +84,13 @@ def account():
     img_file = url_for('static', filename='profile_pics/' + current_user.image)
     return render_template('account.html', title='Account',
                             img_file=img_file, form=form)
+
+
+@app.route('/post/new', methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form = Post()
+    if form.validate_on_submit():
+        flash('Post created successfully', 'info')
+        return redirect('/')
+    return render_template('new_post.html', title='New Post', form=form)

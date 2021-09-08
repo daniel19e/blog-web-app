@@ -49,6 +49,16 @@ main
     /* Center contents */
     text-align: center;
 }
+.media-body 
+{
+  text-align: left;
+}
+#post_img
+{
+  display: flex;
+  justify-content: left;
+
+}
 .article-title {
     color: #444444;
   }

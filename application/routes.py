@@ -4,14 +4,15 @@ from PIL import Image
 import os
 from flask import flash, redirect, render_template, url_for, request
 from application import app, db, bcrypt
-from application.models import User
+from application.models import BlogPost, User
 from application.forms import Register, Login, UpdateAccountInfo, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
 
 @app.route("/")
 def index():
-    return render_template("home.html")
+    posts = BlogPost.query.all()
+    return render_template("home.html", posts=posts)
 
 @app.route("/about")
 def about():
@@ -91,6 +92,9 @@ def account():
 def new_post():
     form = Post()
     if form.validate_on_submit():
+        post = BlogPost(title=form.title.data, body=form.body.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
         flash('Post created successfully', 'info')
         return redirect('/')
     return render_template('new_post.html', title='New Post', form=form)

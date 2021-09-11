@@ -2,8 +2,9 @@
 {% block main %}
 <div class="container-fluid">
 
-    <form action="/post/new" method="post">
+    <form action="" method="post">
         {{ form.hidden_tag() }}
+        <legend class="mb-3">{{ legend }}</legend>
         <div class="form-group mb-2">
             {% if form.title.errors %}
                 {{ form.title(class="form-control is-invalid")}}

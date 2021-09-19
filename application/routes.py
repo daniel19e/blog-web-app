@@ -5,7 +5,7 @@ import os
 from flask import flash, redirect, render_template, url_for, request, abort
 from application import app, db, bcrypt
 from application.models import BlogPost, User
-from application.forms import Register, Login, UpdateAccountInfo, Post
+from application.forms import Register, Login, UpdateAccountInfo, Post, RequestReset, PasswordReset
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -145,3 +145,10 @@ def post_by_user(username):
         .order_by(BlogPost.date.desc())\
         .paginate(page=page, per_page=4)
     return render_template("post_by_user.html", posts=posts, user=user)
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect('/')
+    form = RequestReset()
+    return render_template('reset_request.html', title='Reset Password', form=form)

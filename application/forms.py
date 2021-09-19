@@ -79,7 +79,7 @@ class Post(FlaskForm):
 class RequestReset(FlaskForm):
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
-    submit = SubmitField('Request Password Request')
+    submit = SubmitField('Request Password Reset')
 
     def validate_email(self, email):
         """Checks if email is already in the database"""

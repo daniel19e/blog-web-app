@@ -3,11 +3,11 @@ import secrets
 from PIL import Image
 import os
 from flask import flash, redirect, render_template, url_for, request, abort
-from application import app, db, bcrypt
+from application import app, db, bcrypt, mail
 from application.models import BlogPost, User
 from application.forms import Register, Login, UpdateAccountInfo, Post, RequestReset, PasswordReset
 from flask_login import login_user, current_user, logout_user, login_required
-
+from flask_mail import Message
 
 @app.route("/")
 def index():
@@ -146,11 +146,25 @@ def post_by_user(username):
         .paginate(page=page, per_page=4)
     return render_template("post_by_user.html", posts=posts, user=user)
 
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request', 
+                    sender='noreply@demo.com', 
+                    recipients=[user.email])
+    msg.body = f'''To reset your password, visit the following link:
+{url_for('reset_token',token=token, _external=True)}
+If you did not make this request then simply ignore this email and no changes will be made'''
+
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_request():
     if current_user.is_authenticated:
         return redirect('/')
     form = RequestReset()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash('An email has been sent with instructions to reset your password', 'info')
+        return redirect('/login')
     return render_template('reset_request.html', title='Reset Password', form=form)
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])

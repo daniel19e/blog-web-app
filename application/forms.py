@@ -75,3 +75,21 @@ class Post(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     body = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
+
+class RequestReset(FlaskForm):
+    email = StringField('Email',
+                        validators=[DataRequired(), Email()])
+    submit = SubmitField('Request Password Request')
+
+    def validate_email(self, email):
+        """Checks if email is already in the database"""
+        email_address = User.query.filter_by(email=email.data).first()
+        if not email_address:
+            raise ValidationError('Could not find that email')
+
+class PasswordReset(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=5)])
+
+    confirm_password = PasswordField('Confirm Password',
+                                     validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')

@@ -32,6 +32,7 @@ def register():
         flash(f'Successfully created an account for {form.username.data}', 'info')
         return redirect('/login')
     return render_template("register.html", title="Register", form=form)
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -176,4 +177,10 @@ def reset_token(token):
         flash('That is an invalid or expired token', 'warning')
         return redirect(url_for('reset_request'))
     form = PasswordReset()
+    if form.validate_on_submit():
+        hash_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password = hash_pw
+        db.session.commit()
+        flash('Your password has been updated', 'info')
+        return redirect('/login')
     return render_template('reset_token.html', title='Reset Password', form=form)

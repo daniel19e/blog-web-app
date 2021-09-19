@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+
+{% block main %}
+<div class="container-fluid">
+
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="form-group mb-2">
+            {% if form.email.errors %}
+                {{ form.email(class="form-control is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.email.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+            {{ form.email(class="form-control", placeholder="Email",autocomplete="off")}}
+            {% endif %}
+        </div>
+        <div class="form-group mb-2">
+            {{ form.submit(class="btn btn-dark", style="background: rgba(0,0,0,0.5)")}}
+        </div>        
+    </form>
+</div>
+{% endblock %}

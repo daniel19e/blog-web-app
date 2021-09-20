@@ -1,4 +1,4 @@
-# Personal blog application 
+# Interactive blog application 
 ## Basic Functionality
 - User authentication (allows to make an account and login)
 - Create, read, update, and delete posts
